@@ -1,0 +1,20 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "amount = amount or 1"
+position = "at"
+payload = "amount = amount and amount * G.GAME.level_mult or G.GAME.level_mult"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+payload = "self.GAME.level_mult = 1"
+match_indent = true

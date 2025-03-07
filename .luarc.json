@@ -1,0 +1,56 @@
+{
+    "format": {
+    "defaultConfig": {
+    "align_continuous_assign_statement": "false"
+    }
+    },
+    "workspace": {
+    "library": [
+    "../smods/",
+    "../../love_api",
+    "../lovely/dump"
+    ]
+    },
+    "runtime": {
+    "version": "LuaJIT"
+    },
+    "codeLens": {
+    "enable": true
+    },
+    "completion": {
+    "callSnippet": "Disable"
+    },
+    "hint": {
+    "enable": true,
+    "setType": true
+    },
+    "type": {
+    "weakUnionCheck": true,
+    "weakNilCheck": true,
+    "inferParamType": false
+    },
+    "diagnostics": {
+    "disable": [
+    "lowercase-global",
+    "need-check-nil",
+    "undefined-field",
+    "undefined-global",
+    "duplicate-set-field",
+    "unused-local",
+    "inject-field"
+    ],
+    "globals": [
+    "to_big",
+    "to_number",
+    "Event",
+    "create_UIBox_your_collection_stickers",
+    "create_UIBox_Other_GameObjects",
+    "hand_chips",
+    "mult",
+    "love",
+    "Back",
+    "G"
+    ],
+    "libraryFiles": "Disable"
+    }
+    }

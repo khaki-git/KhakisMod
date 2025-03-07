@@ -1,0 +1,48 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+payload = "self.GAME.investment_mult = 1"
+match_indent = true
+
+# Economy Tag
+
+[[patches]]
+[patches.pattern]
+target = "tag.lua"
+pattern = "ease_dollars(math.min(self.config.max, math.max(0,G.GAME.dollars)), true)"
+position = "at"
+payload = "ease_dollars(math.min(self.config.max*G.GAME.investment_mult, math.max(0,G.GAME.dollars)), true)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "tag.lua"
+pattern = "elseif name_to_check == 'Economy Tag' then loc_vars = {self.config.max}"
+position = "at"
+payload = "elseif name_to_check == 'Economy Tag' then loc_vars = {self.config.max*(G.GAME.investment_mult or 1)}"
+match_indent = true
+
+# Hermit
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "ease_dollars(math.max(0,math.min(G.GAME.dollars, self.ability.extra)), true)"
+position = "at"
+payload = "ease_dollars(math.max(0,math.min(G.GAME.dollars, self.ability.extra*G.GAME.investment_mult)), true)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "elseif _c.name == \"The Hermit\" then loc_vars = {cfg.extra}"
+position = "at"
+payload = "elseif _c.name == \"The Hermit\" then loc_vars = {cfg.extra*(G.GAME.investment_mult or 1)}"
+match_indent = true

@@ -1,0 +1,14 @@
+{
+  "id": "kmod",
+  "name": "Khaki's Mod",
+  "display_name": "Khaki's Mod",
+  "author": ["Khaki"],
+  "description": "Adds all of MY AWESOME IDEAS :)",
+  "prefix": "kmod",
+  "main_file": "main.lua",
+  "priority": 5,
+  "badge_colour": "f0d163",
+  "badge_text_colour": "fff",
+  "version": "1.0.0",
+  "dependencies": ["Steamodded"]
+}

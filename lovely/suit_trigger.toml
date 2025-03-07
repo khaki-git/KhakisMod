@@ -1,0 +1,14 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "local new_card = G.P_CARDS[new_code..'_'..new_val]"
+position = "after"
+payload = """for _,joker2trigger in pairs(G.jokers.cards) do
+joker2trigger:calculate_joker({other_card = self, change_suit = true})
+end"""
+match_indent = true

@@ -1,0 +1,244 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = '''
+{n=G.UIT.T, config={text = "X", lang = G.LANGUAGES['en-us'], scale = scale*2, colour = G.C.UI_MULT, shadow = true}},
+'''
+position = "at"
+payload = '''
+{n=G.UIT.T, config={id = 'mult_x_symbol', ref_table = G, ref_value = "x_symbol", lang = G.LANGUAGES['en-us'], scale = scale*2, shadow = true,  colour = G.C.UI_MULT_ALT}},
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'game.lua'
+pattern = '''
+blind_spacer = self.HUD:get_UIE_by_ID('blind_spacer')
+'''
+position = "after"
+payload = '''
+,mult_symbol = self.HUD:get_UIE_by_ID('mult_x_symbol')
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'globals.lua'
+pattern = '''
+self.keybind_mapping = {{
+        a = 'dpleft',
+        d = 'dpright',
+        w = 'dpup',
+        s = 'dpdown',
+        x = 'x',
+        c = 'y',
+        space = 'a',
+        shift = 'b',
+        esc = 'start',
+        q = 'triggerleft',
+        e = 'triggerright',
+    }}
+'''
+position = "after"
+payload = '''
+self.x_symbol = "X"
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+payload = "G.x_symbol = \"X\""
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+payload = "G.C.UI_MULT_ALT = G.C.UI_MULT"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'functions/UI_definitions.lua'
+pattern = '''
+{n=G.UIT.C, config={align = "cl", minw = 2, minh=1, r = 0.1,colour = G.C.UI_MULT, id = 'hand_mult_area', emboss = 0.05}, nodes={
+'''
+position = "at"
+payload = '''
+{n=G.UIT.C, config={align = "cl", minw = 2, minh=1, r = 0.1,colour = G.C.UI_MULT_ALT, id = 'hand_mult_area', emboss = 0.05}, nodes={
+'''
+match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern]
+target = 'globals.lua'
+pattern = '''
+G.C.UI_MULT = copy_table(G.C.RED)
+'''
+position = "after"
+payload = '''
+G.C.UI_MULT_ALT = copy_table(G.C.RED)
+G.C.UI_POW = copy_table(G.C.PURPLE)
+G.C.UI_DIV = copy_table(G.C.FILTER)
+G.C.UI_QUESTION = copy_table(G.C.BLUE)
+G.C.UI_ADD = copy_table(G.C.GREEN)
+G.C.UI_SUB = copy_table(G.C.MONEY)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'functions/button_callbacks.lua'
+pattern = '''
+chips = {
+      id = 'flame_chips',
+      arg_tab = 'chip_flames',
+      colour = G.C.UI_CHIPS,
+      accent = G.C.UI_CHIPLICK
+    },
+    mult = {
+      id = 'flame_mult',
+      arg_tab = 'mult_flames',
+      colour = G.C.UI_MULT,
+      accent = G.C.UI_MULTLICK
+    }
+'''
+position = "at"
+payload = '''
+chips = {
+      id = 'flame_chips',
+      arg_tab = 'chip_flames',
+      colour = G.C.UI_CHIPS,
+      accent = G.C.UI_CHIPLICK
+    },
+    mult = {
+      id = 'flame_mult',
+      arg_tab = 'mult_flames',
+      colour = G.C.UI_MULT_ALT,
+      accent = G.C.UI_MULTLICK
+    }
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'back.lua'
+pattern = '''
+ease_colour(G.C.UI_MULT, {0.8, 0.45, 0.85, 1})
+'''
+position = "at"
+payload = '''
+ease_colour(G.C.UI_MULT_ALT, {0.8, 0.45, 0.85, 1})
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'back.lua'
+pattern = '''
+self.GAME.dollars = self.GAME.starting_params.dollars
+'''
+position = "after"
+payload = '''
+G.C.UI_MULT_ALT = G.C.UI_MULT
+G.GAME.operation = nil
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''
+ease_to = G.GAME.chips + math.floor(hand_chips*mult),
+'''
+position = "at"
+payload = '''
+ease_to = G.GAME.chips + math.floor(
+    (G.x_symbol == "X" and hand_chips * mult)
+    or (G.x_symbol == "+" and hand_chips + mult)
+    or (G.x_symbol == "-" and (math.abs(hand_chips - mult) + 3))
+    or (G.x_symbol == "/" and (math.abs(hand_chips / mult) + 1))
+    or (G.x_symbol == "^" and hand_chips^mult)
+    or (G.x_symbol == "^^" and tetration(hand_chips, mult))
+    or 0
+),
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''
+func = (function()  update_hand_text({delay = 0, immediate = true}, {mult = 0, chips = 0, chip_total = math.floor(hand_chips*mult), level = '', handname = ''});play_sound('button', 0.9, 0.6);return true end)
+'''
+position = "at"
+payload = '''
+func = (function()  update_hand_text({delay = 0, immediate = true}, {mult = 0, chips = 0, chip_total = math.floor(
+    (G.x_symbol == "X" and hand_chips * mult)
+    or (G.x_symbol == "+" and hand_chips + mult)
+    or (G.x_symbol == "-" and (math.abs(hand_chips - mult) + 3))
+    or (G.x_symbol == "/" and (math.abs(hand_chips / mult) + 1))
+    or (G.x_symbol == "^" and hand_chips^mult)
+    or (G.x_symbol == "^^" and tetration(hand_chips, mult))
+    or 0
+), level = '', handname = ''});play_sound('button', 0.9, 0.6);return true end)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''
+if hand_chips*mult > 0 then
+'''
+position = "at"
+payload = '''
+if (math.floor(
+    (G.x_symbol == "X" and hand_chips * mult)
+    or (G.x_symbol == "+" and hand_chips + mult)
+    or (G.x_symbol == "-" and (math.abs(hand_chips - mult) + 3))
+    or (G.x_symbol == "/" and (math.abs(hand_chips / mult) + 1))
+    or (G.x_symbol == "^" and hand_chips^mult)
+    or (G.x_symbol == "^^" and tetration(hand_chips, mult))
+    or 0))
+ > to_big(0) then
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = '''
+function RESET_STATES(state)
+  for k, v in pairs(SOURCES) do
+      for i, s in ipairs(v) do
+          s.created_on_state = state
+      end
+  end
+end
+'''
+position = "after"
+payload = '''
+function tetration(a, n)
+  local result = 1
+  for i = 1, to_number(n) do
+    result = a ^ result
+  end
+  return result
+end
+'''
+match_indent = true

@@ -1,0 +1,35 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+payload = "self.GAME.enhance_bonus = 0"
+match_indent = true
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = """if self.ability.consumeable.max_highlighted then
+                if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
+                    return true
+                end
+            end"""
+position = "at"
+payload = """if self.ability.consumeable.max_highlighted then
+                if self.ability.consumeable.mod_num+(G.GAME.enhance_bonus or 1) >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
+                    return true
+                end
+            end"""
+match_indent = true
+
+[[patches]]
+[patches.regex] # tragedy
+target = "functions/common_events.lua"
+pattern = "(cfg\\.max_highlighted)"
+position = "at"
+payload = "cfg.max_highlighted+(G.GAME.enhance_bonus or 1)"
+match_indent = true
