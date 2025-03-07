@@ -1,0 +1,20 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "self.GAME.selected_back_key = selected_back"
+position = "after"
+payload = "self.GAME.voucher_additions = 0"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "for _,_ in pairs(G.GAME.current_round.voucher.spawn) do vouchers_to_spawn = vouchers_to_spawn + 1 end"
+position = "at"
+payload = "for _,_ in pairs(G.GAME.current_round.voucher.spawn) do vouchers_to_spawn = vouchers_to_spawn + 1 end vouchers_to_spawn = vouchers_to_spawn + G.GAME.voucher_additions"
+match_indent = true
