@@ -3,28 +3,39 @@ badapple_animation_dt = 0
 
 SMODS.Joker({
     key = "bad_apple",
-    loc_txt = {name = "Bad Apple", text = {"{C:blue}+1{} Chips for the current", "animation frame this card is on.", "{C:inactive}(Currently {C:blue}+#1#{C:inactive} Chips)"}},
+    loc_txt = {name = "Bad Apple", text = {"At {C:attention}end of round{}, remove {C:dark_edition}Negative{}", "from a {C:attention}Joker{} and add {C:dark_edition}Negative{} to", "another {C:attention}Joker"}},
     atlas = "badapple",
     config = { extra = {}},
-    loc_vars = function(self, info_queue, card)
-        local obj = G.P_CENTERS.j_kmod_bad_apple
-        return {
-            vars = {
-                obj.pos.x + obj.pos.y * 75
-            }
-        }
-    end,
     calculate = function(self, card, context)
-        local obj = G.P_CENTERS.j_kmod_bad_apple
-        local chips = obj.pos.x + obj.pos.y * 75
+        if context.end_of_round and not context.other_card then
+            local has_negative = {}
+            local no_edition = {}
 
-        if context.joker_main then
-            local obj = G.P_CENTERS.j_kmod_bad_apple
-            local chips = obj.pos.x + obj.pos.y * 75
+            for _,c in pairs(G.jokers.cards) do
+                local edition_t = c.edition
+                if edition_t then
+                    local edition = edition_t.type
+                    if edition == "negative" then
+                        table.insert(has_negative, c)
+                    end
+                else
+                    table.insert(no_edition, c)
+                end
+            end
 
-            return {
-                chips = chips
-            }
+            if #has_negative > 0 then
+                local negative = pseudorandom_element(has_negative, pseudohash("bad_apple"))
+                if negative then
+                    negative:set_edition(nil)
+                end
+            end
+            if #no_edition > 0 then
+                local negative = pseudorandom_element(no_edition, pseudohash("bad_apple"))
+
+                if negative then
+                    negative:set_edition({negative = true})
+                end
+            end
         end
     end
 })
