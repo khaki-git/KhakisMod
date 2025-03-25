@@ -26,7 +26,7 @@ SMODS.Blind({
     end,
 })
 
-calc_hook = SMODS.calculate_context
+local calc_hook = SMODS.calculate_context
 
 function SMODS.calculate_context(context, return_table)
     local x = calc_hook(context, return_table)

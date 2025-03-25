@@ -1,0 +1,15 @@
+# kmod_debuffed
+
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+pattern = "self.debuff = should_debuff"
+position = "after"
+payload = "self.kmod_debuffed = true"
+match_indent = true
+times = 1

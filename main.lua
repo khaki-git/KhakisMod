@@ -1,3 +1,5 @@
+KMOD = {}
+
 function math.clamp(value, min, max)
     if value < min then
         return min
