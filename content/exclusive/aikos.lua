@@ -2,6 +2,7 @@ if SMODS.find_mod("aikoyorisshenanigans") then
     print("found aikos bullshit")
 
     KMOD.played_words = {}
+    KMOD.recent_word = nil
 
     SMODS.Blind({
         atlas = "kmod_blinds", pos = {y = 5},
@@ -16,18 +17,16 @@ if SMODS.find_mod("aikoyorisshenanigans") then
             return false
         end,
         debuff_hand = function(cards, hand, handname, check)
-            local word = G.GAME.aiko_current_word
-            
-            if not word then return false end
-            word = string.lower(word)
-            local lowerword = string.lower(word)
-            word = string.gsub(" " .. word, "%W%l", string.upper):sub(2)
-
-            for _, played in pairs(KMOD.played_words) do
-                if played == word then
+            local w = ""
+            for _,c in pairs(hand) do
+                w=w..string.lower(c.ability.aikoyori_letters_stickers)
+            end
+            for _,uw in pairs(KMOD.played_words) do
+                if uw==w then
                     return true
                 end
             end
+            return false
         end
     })
 
@@ -45,7 +44,7 @@ if SMODS.find_mod("aikoyorisshenanigans") then
             word = string.gsub(" " .. word, "%W%l", string.upper):sub(2)
 
             if context.before then
-                table.insert(KMOD.played_words, word)
+                table.insert(KMOD.played_words, string.lower(word))
             end
         end
         
