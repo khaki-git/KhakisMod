@@ -21,5 +21,6 @@ SMODS.Joker({
                 }
             end
         end
-    end
+    end,
+    in_pool = KMOD.corrupt_joker_spawn
 })

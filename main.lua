@@ -1,5 +1,11 @@
 KMOD = {}
 
+function KMOD.corrupt_joker_spawn(self, args) -- in_pool function
+    if G.GAME.round_resets.ante > 5 and #G.jokers.cards > 4 then return true end
+    if G.GAME.round_resets.ante > 7 and #G.jokers.cards > 3 then return true end
+    return false
+end
+
 function math.clamp(value, min, max)
     if value < min then
         return min
